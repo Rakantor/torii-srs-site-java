@@ -1,24 +1,45 @@
-# Apache config for the static Torii SRS site.
+# .htaccess for the torii-srs.com document root.
 #
-# Deploy this as `.htaccess` in the document root alongside the contents of dist/.
-# It replaces public/_redirects and public/_headers, which are Cloudflare Pages
+# This document root is shared: the static site lives alongside the API and the
+# app's own resources (vocab.json, version, knowledge-base, system-notification,
+# transaction-*.html, img_files/, icns/, font_files/, audio_files/). Nothing here
+# should touch those.
+#
+# Replaces public/_redirects and public/_headers, which are Cloudflare Pages
 # formats and are ignored by Apache.
 #
-# Requires: mod_rewrite, mod_headers, mod_expires, mod_dir
-#   sudo a2enmod rewrite headers expires dir && sudo systemctl reload apache2
-# And `AllowOverride All` for this directory in the vhost.
+# Requires: mod_rewrite, mod_headers, mod_alias, mod_dir
+#   sudo a2enmod rewrite headers alias dir && sudo systemctl reload apache2
 
-# index.php is kept in the list so anything else on this host that relies on a
-# PHP index (e.g. /api/) keeps working. The WordPress index.php at the docroot
-# should be deleted - otherwise it wins over index.html and still boots WP.
+# No directory listings (kept from the previous Really Simple Security block).
+Options -Indexes
+
+# index.php stays in the list for anything under /api/ that relies on a PHP
+# index. The WordPress index.php at the document root should be deleted.
 DirectoryIndex index.html index.php
 
-# mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/
-# because each page is a directory containing index.html. Nothing to add here.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
 
-# Applies to the whole host, so /api/ 404s would render this HTML page too.
-# deploy/api-htaccess resets that for the API directory - install it as
-# api/.htaccess so API clients keep getting the API's own responses.
+  # KEEP. Nothing to do with WordPress: this exposes the Authorization header to
+  # CGI/FastCGI. Removing it breaks Bearer/Basic auth for the API.
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+
+# The WordPress front controller that used to live here:
+#
+#   RewriteCond %{REQUEST_FILENAME} !-f
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteRule . /index.php [L]
+#
+# is deliberately gone. It sent every unmatched URL into WordPress; with WordPress
+# removed it would 500, and while it is present it overrides the 404 page below.
+
+# mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/,
+# because each page is a directory containing index.html.
+
+# Host-wide, so /api/ 404s would render this HTML page too. deploy/api-htaccess
+# resets that - install it as api/.htaccess.
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
@@ -45,7 +66,7 @@ ErrorDocument 404 /404.html
   Redirect 301 /2018/06/23/version-1-1-0-june-23-2018/ /release-notes/#v1-1-0
   Redirect 301 /2018/06/10/version-1-0-1-june-10-2018/ /release-notes/#v1-0-1
 
-  # Archives, pagination, author
+  # Archives, pagination, author, feed
   Redirect 301 /category/changelog/ /release-notes/
   Redirect 301 /author/rakantor/    /about/
   Redirect 301 /feed/               /release-notes/
@@ -55,48 +76,41 @@ ErrorDocument 404 /404.html
   RedirectMatch 301 ^/wp-admin(/.*)?$ /
   Redirect 301 /wp-login.php /
 
-  # Installers moved to Cloudflare R2. These keep links published while the site
-  # ran on WordPress working after /wp/ is deleted.
+  # Installers now live in Cloudflare R2. Keeps links published while the site
+  # ran on WordPress working after wp/ is deleted.
   RedirectMatch 301 ^/wp/wp-content/uploads/2025/11/(.*)$ https://dl.torii-srs.com/v1.4.9/$1
   RedirectMatch 301 ^/wp/wp-content/uploads/2020/05/(.*)$ https://dl.torii-srs.com/v1.4.8/$1
 </IfModule>
 
 # ---------------------------------------------------------------------------
-# Caching
+# Caching and headers
 # ---------------------------------------------------------------------------
 <IfModule mod_headers.c>
   # Fingerprinted build output never changes under a given name.
   SetEnvIf Request_URI "^/_astro/" TORII_IMMUTABLE=1
   Header set Cache-Control "public, max-age=31536000, immutable" env=TORII_IMMUTABLE
 
-  # Images are stable but not fingerprinted.
+  # Site images are stable but not fingerprinted.
   SetEnvIf Request_URI "^/images/" TORII_IMAGE=1
   Header set Cache-Control "public, max-age=86400, stale-while-revalidate=604800" env=TORII_IMAGE
 
-  # Security headers, matching what Cloudflare Pages was serving.
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Was `".(eot|ttf|otf|woff)"` - the dot was unescaped (matching any character)
+  # and woff2 was missing, which is the format this site actually serves.
+  <FilesMatch "\.(eot|ttf|otf|woff2?)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
 </IfModule>
-
-# ---------------------------------------------------------------------------
-# Housekeeping
-# ---------------------------------------------------------------------------
-
-# These are Cloudflare Pages artefacts; they do nothing here and needn't be public.
-<FilesMatch "^(_redirects|_headers)$">
-  Require all denied
-</FilesMatch>
 
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
     application/javascript application/json image/svg+xml
 </IfModule>
 
-# Fonts are served cross-origin by nothing right now, but this avoids surprises
-# if the site is ever fronted by a CDN on another hostname.
-<IfModule mod_headers.c>
-  <FilesMatch "\.(woff2?|ttf|otf)$">
-    Header set Access-Control-Allow-Origin "*"
-  </FilesMatch>
-</IfModule>
+# Cloudflare Pages artefacts, if they were uploaded. Harmless but not public.
+<FilesMatch "^(_redirects|_headers)$">
+  Require all denied
+</FilesMatch>
