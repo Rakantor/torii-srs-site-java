@@ -21,8 +21,10 @@ DirectoryIndex index.html index.php
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # KEEP. Nothing to do with WordPress: this exposes the Authorization header to
-  # CGI/FastCGI. Removing it breaks Bearer/Basic auth for the API.
+  # Nothing to do with WordPress: exposes the Authorization header to CGI/FastCGI.
+  # /api/v1/ and /api/v2/ each set this for themselves, so they do not depend on
+  # it, but it costs nothing and covers anything added later without its own
+  # .htaccess. Keep it.
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
 
@@ -33,13 +35,20 @@ DirectoryIndex index.html index.php
 #   RewriteRule . /index.php [L]
 #
 # is deliberately gone. It sent every unmatched URL into WordPress; with WordPress
-# removed it would 500, and while it is present it overrides the 404 page below.
+# removed it would 500, and while present it overrides the 404 page below.
+#
+# Removing it does not affect the API: mod_rewrite rules are not inherited into a
+# subdirectory that switches on its own RewriteEngine (absent RewriteOptions
+# Inherit), and both /api/v1/ and /api/v2/ do exactly that. They never saw these
+# rules in the first place.
 
 # mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/,
 # because each page is a directory containing index.html.
 
-# Host-wide, so /api/ 404s would render this HTML page too. deploy/api-htaccess
-# resets that - install it as api/.htaccess.
+# Safe for the API. /api/v1/ and /api/v2/ each have their own .htaccess with a
+# front controller (`RewriteRule ^(.*)$ index.php`), so PHP handles every request
+# in those subtrees and emits its own 404 body. Apache only substitutes an
+# ErrorDocument when it generates the error itself, which never happens there.
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
