@@ -5,8 +5,10 @@ dist/
 # local Miniflare state from `wrangler pages dev` - scratch only, regenerated on demand
 .wrangler/
 
-# dependencies
+# dependencies - pnpm is the package manager, pnpm-lock.yaml is the only lockfile
 node_modules/
+package-lock.json
+yarn.lock
 
 # mirrored installers - ~250MB, these live in Cloudflare R2, not in git.
 # Recreate with: npm run mirror-assets
