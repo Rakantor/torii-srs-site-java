@@ -1,0 +1,123 @@
+@import 'tailwindcss';
+
+/* Fonts matching the original Jevelin theme, self-hosted so no CDN call.
+   Latin subset only - the site has no Cyrillic/Greek/Vietnamese copy, and the
+   full subset set ships ~100 extra font files. */
+@import '@fontsource/raleway/latin-400.css';
+@import '@fontsource/raleway/latin-600.css';
+@import '@fontsource/raleway/latin-700.css';
+@import '@fontsource/roboto/latin-300.css';
+@import '@fontsource/roboto/latin-400.css';
+@import '@fontsource/roboto/latin-500.css';
+@import '@fontsource/roboto/latin-700.css';
+
+/*
+ * Palette lifted from the live WordPress site via computed styles.
+ * Two deliberate departures, both readability fixes:
+ *   --color-body  was #8D8D8D  (2.9:1 on white, fails WCAG AA)
+ *   base font     was 14px
+ */
+@theme {
+  --color-accent: #47c9e5;
+  --color-accent-deep: #00c1c4;
+  --color-accent-dark: #2ba9c5;
+
+  --color-ink: #3f3f3f;
+  --color-body: #5a5a5a;
+  --color-muted: #8d8d8d;
+
+  --color-dark: #353535;
+  --color-dark-soft: #3d3d3d;
+  --color-surface: #fbfbfb;
+
+  /* The footer is darker than the features section so the two read as separate
+     bands, matching the original site (#3d3d3d features, #262626 / #222 footer). */
+  --color-footer: #262626;
+  --color-footer-deep: #222222;
+
+  --font-display: 'Raleway', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    /* Sticky header height: py-3 (1.5rem) + the 2.25rem logo. The full-screen hero
+       subtracts this so the hero plus header occupy exactly one viewport. */
+    --header-h: 3.75rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Anchored release-note headings shouldn't hide under the sticky header. */
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-body);
+    background-color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-ink);
+    line-height: 1.25;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-deep);
+    outline-offset: 2px;
+  }
+}
+
+/*
+ * Entrance reveals, replacing the WOW.js fadeInUp the old theme used
+ * (0.7s, staggered 0 / 0.3 / 0.6s across each row of three).
+ *
+ * The hidden state is scoped to .js-anim, which is only set by an inline script
+ * when JS runs and reduced motion is not requested - so content is never left
+ * invisible with no way to reveal it.
+ */
+.js-anim [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.js-anim [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s ease-out;
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js-anim [data-reveal],
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

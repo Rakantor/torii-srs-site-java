@@ -1,0 +1,129 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+const releases = (await getCollection('releases')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+// Render every entry up front so the whole changelog lives on one page.
+const entries = await Promise.all(
+  releases.map(async (entry) => ({
+    ...entry,
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<BaseLayout
+  title="Release Notes – Torii SRS"
+  description="The complete Torii SRS changelog, from version 1.0.1 through the latest release."
+>
+  <PageHeader title="Release Notes" />
+
+  <div class="mx-auto max-w-6xl gap-12 px-5 py-14 lg:grid lg:grid-cols-[10rem_1fr]">
+    <!-- Version jump rail -->
+    <nav aria-label="Jump to version" class="mb-10 lg:mb-0">
+      <div class="lg:sticky lg:top-24">
+        <p class="mb-3 font-display text-xs font-bold tracking-[0.15em] text-muted uppercase">
+          Versions
+        </p>
+        <ul class="flex flex-wrap gap-2 lg:flex-col lg:gap-1">
+          {
+            entries.map((entry) => (
+              <li>
+                <a
+                  href={`#v${entry.data.version.replaceAll('.', '-')}`}
+                  class="block rounded px-2 py-1 font-mono text-sm text-body transition-colors hover:bg-surface hover:text-accent-deep"
+                >
+                  {entry.data.version}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <div class="min-w-0">
+      {
+        entries.map((entry, i) => (
+          <article
+            id={`v${entry.data.version.replaceAll('.', '-')}`}
+            class:list={[
+              'scroll-mt-24',
+              i > 0 && 'mt-12 border-t border-black/8 pt-12',
+            ]}
+          >
+            <h2 class="font-display text-2xl font-bold text-ink">
+              Version {entry.data.version}
+            </h2>
+            <p class="mt-1 text-sm text-muted">
+              <time datetime={entry.data.date.toISOString().slice(0, 10)}>
+                Released {entry.data.released}
+              </time>
+            </p>
+
+            <div class="release-body mt-5">
+              <entry.Content />
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Markdown coming out of the changelog collection. */
+  .release-body p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  .release-body h3 {
+    margin-top: 1.75rem;
+    margin-bottom: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+
+  .release-body h3:first-child {
+    margin-top: 0;
+  }
+
+  .release-body ul {
+    margin-bottom: 1rem;
+    list-style: disc;
+    padding-left: 1.35rem;
+  }
+
+  .release-body li {
+    margin-bottom: 0.4rem;
+    line-height: 1.65;
+  }
+
+  .release-body strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .release-body a {
+    color: var(--color-accent-deep);
+    text-underline-offset: 2px;
+  }
+
+  .release-body a:hover {
+    text-decoration: underline;
+  }
+
+  .release-body code {
+    background: var(--color-surface);
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.9em;
+  }
+</style>

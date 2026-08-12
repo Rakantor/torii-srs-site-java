@@ -1,0 +1,50 @@
+---
+import { CONTACT_HREF } from '../data/site';
+
+const sitemap = [
+  { href: '/frequently-asked-questions/', label: 'FAQ' },
+  { href: CONTACT_HREF, label: 'Contact' },
+  { href: '/release-notes/', label: 'Release Notes' },
+  { href: '/about/', label: 'About' },
+  { href: '/privacy/', label: 'Privacy' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-footer text-white/70">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2">
+    <div>
+      <h3 class="mb-3 font-display text-lg font-bold text-white">About the Dev</h3>
+      <p class="text-sm leading-relaxed">
+        Torii SRS is brought to you by Rakantor.<br />
+        If there’s anything you’d like to tell me, <a
+          href={CONTACT_HREF}
+          class="text-accent underline-offset-2 hover:underline">contact me</a
+        >.<br />
+        I’d love to hear your feedback, ideas and feature wishes!
+      </p>
+    </div>
+
+    <div class="sm:justify-self-end">
+      <h3 class="mb-3 font-display text-lg font-bold text-white">Sitemap</h3>
+      <ul class="space-y-1.5 text-sm">
+        {
+          sitemap.map((item) => (
+            <li>
+              <a href={item.href} class="underline-offset-2 transition-colors hover:text-accent hover:underline">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-footer-deep">
+    <p class="mx-auto max-w-6xl px-5 py-5 text-center text-xs text-white/50">
+      Copyright (c) 2018-{year} Torii SRS. All Rights Reserved.
+    </p>
+  </div>
+</footer>

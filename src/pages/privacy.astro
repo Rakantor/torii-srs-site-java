@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Prose from '../components/Prose.astro';
+
+// The policy is a long Termly-generated document. It is kept as a pre-cleaned
+// HTML fragment rather than hand-converted markup so the legal text stays
+// byte-for-byte what it was on WordPress.
+import privacyContent from '../data/privacy-content.html?raw';
+---
+
+<BaseLayout
+  title="Privacy – Torii SRS"
+  description="How Torii SRS collects, stores, uses and shares your information."
+>
+  <PageHeader title="Privacy" />
+
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <Prose>
+      <div class="privacy-doc" set:html={privacyContent} />
+    </Prose>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  /* Termly's document separates blocks with <br> rather than real paragraphs,
+     so give the inline structure some breathing room. */
+  .privacy-doc {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    overflow-wrap: break-word;
+  }
+
+  .privacy-doc ul {
+    margin: 0.5rem 0 1rem;
+    list-style: disc;
+    padding-left: 1.4rem;
+  }
+
+  .privacy-doc li {
+    margin-bottom: 0.3rem;
+  }
+
+  .privacy-doc strong {
+    color: var(--color-ink);
+  }
+
+  /* Empty inline anchor targets for the table of contents. */
+  .privacy-doc span[id] {
+    display: block;
+    scroll-margin-top: 6rem;
+  }
+</style>

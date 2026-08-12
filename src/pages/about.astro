@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Prose from '../components/Prose.astro';
+---
+
+<BaseLayout
+  title="About – Torii SRS"
+  description="Credits and attributions for Torii SRS: libGDX, visUI, WaniKani, the Core 10k deck, JLPT data, fonts and music."
+>
+  <PageHeader title="About" />
+
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <Prose>
+      <p>
+        Torii SRS is designed, coded and maintained by Rakantor. Powered by the <a
+          href="https://libgdx.badlogicgames.com/"
+          target="_blank"
+          rel="noopener noreferrer">libGDX</a
+        > framework and <a
+          href="https://github.com/kotcrab/vis-editor"
+          target="_blank"
+          rel="noopener noreferrer">visUI</a
+        > library.<br />
+        Its interface design and <a
+          href="https://en.wikipedia.org/wiki/Spaced_repetition"
+          target="_blank"
+          rel="noopener noreferrer">SRS</a
+        > are inspired by <a href="https://wanikani.com" target="_blank" rel="noopener noreferrer"
+          >WaniKani.com</a
+        > – a powerful web application for learning Japanese Kanji and vocabulary made by Koichi and
+        Viet of the <a href="https://www.tofugu.com/" target="_blank" rel="noopener noreferrer"
+          >Tofugu Blog</a
+        >. Many of Torii’s features were inspired by various third party plugins for said website,
+        developed by the amazing <a
+          href="https://community.wanikani.com/"
+          target="_blank"
+          rel="noopener noreferrer">WaniKani Community</a
+        >. The same community actively helps Torii’s development by submitting useful feedback,
+        suggestions, requests and bug reports.
+      </p>
+
+      <p>
+        Vocabulary data comes from a modified version of the <a
+          href="http://rtkwiki.koohii.com/wiki/Core_10k"
+          target="_blank"
+          rel="noopener noreferrer">Core 10k deck</a
+        > originally published by user pmnox on the <a
+          href="https://forum.koohii.com/"
+          target="_blank"
+          rel="noopener noreferrer">Kanji Koohii Forums</a
+        >. Torii’s vocabulary database is continuously being expanded and improved with the help of
+        the community.<br />
+        JLPT data and some example sentences were taken from <a
+          href="http://www.tanos.co.uk/jlpt/"
+          target="_blank"
+          rel="noopener noreferrer">Jonathan Waller’s JLPT Resource page</a
+        >.<br />
+        Torii uses a variety of third party Japanese fonts, which are available for free to everyone
+        on <a href="https://freejapanesefont.com" target="_blank" rel="noopener noreferrer"
+          >FreeJapaneseFont.com</a
+        >.<br />
+        Check out <a href="http://studiomegaane.com/english/" target="_blank" rel="noopener noreferrer"
+          >Studio Megaane</a
+        > and their <a
+          href="https://www.youtube.com/channel/UCL6B3WVcVHJvU2YSF-i-oUg"
+          target="_blank"
+          rel="noopener noreferrer">YouTube Channel</a
+        > for their awesome 8bit music library!
+      </p>
+
+      <p>
+        Torii SRS provides links to:<br />
+        <a href="https://jisho.org/" target="_blank" rel="noopener noreferrer">Jisho.org</a> – a
+        powerful Japanese-English dictionary crafted by Kim, Miwa and Andrew.<br />
+        <a href="https://tatoeba.org/eng" target="_blank" rel="noopener noreferrer">Tatoeba.org</a> –
+        a free collaborative online database of example sentences founded by Trang Ho.
+      </p>
+
+      <p>
+        All graphical content used within the application and on <a href="https://torii-srs.com"
+          >torii-srs.com</a
+        > are the properties of their respective creators.<br />
+        This website is built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer"
+          >Astro</a
+        > and <a href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer"
+          >Tailwind CSS</a
+        >.<br />
+        Hosted by <a href="https://pages.cloudflare.com/" target="_blank" rel="noopener noreferrer"
+          >Cloudflare Pages</a
+        >.
+      </p>
+    </Prose>
+  </section>
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Prose from '../components/Prose.astro';
+import { CONTACT_HREF } from '../data/site';
+---
+
+<BaseLayout
+  title="macOS Troubleshooting – Torii SRS"
+  description="Fixes for common macOS issues with Torii SRS: Gatekeeper quarantine, missing audio and executable permissions."
+>
+  <PageHeader title="macOS Troubleshooting" />
+
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <Prose>
+      <h2>1. Torii SRS cannot be opened…</h2>
+      <p>
+        Torii isn’t enrolled in Apple’s paid developer program, so it can’t be code-signed. macOS
+        Gatekeeper flags unsigned apps downloaded from the internet as “quarantined”, which causes
+        the error you’re seeing.
+      </p>
+      <ol>
+        <li>Move <strong>ToriiSRS.app</strong> to your <strong>/Applications</strong> folder.</li>
+        <li>Open Terminal and run: <code>xattr -cr /Applications/ToriiSRS.app</code></li>
+      </ol>
+      <p>That clears the quarantine flag. Proceed to launch the app normally.</p>
+
+      <h2>2. No Audio</h2>
+      <p>Make sure you have moved Torii into your Applications folder!</p>
+      <p>
+        Also confirm that your third-party firewall (LuLu, Little Snitch, Radio Silence, …) doesn’t
+        block new connections by default.
+      </p>
+      <img
+        src="/images/macos-audio-help.gif"
+        alt="Allowing Torii SRS through a third-party macOS firewall"
+        width="754"
+        height="612"
+        loading="lazy"
+        decoding="async"
+      />
+
+      <h2>3. The application “Torii SRS” can’t be opened</h2>
+      <p>This means the app isn’t marked as executable. You’ll have to set permissions manually.</p>
+      <ol>
+        <li>Right-click Torii SRS.app &gt; Show Package Contents &gt; Contents &gt; MacOS</li>
+        <li>Open Terminal</li>
+        <li>
+          Type in “sudo chmod +x ” (notice the space after +x) and drag &amp; drop “JavaAppLauncher”
+          onto the Terminal window
+        </li>
+        <li>Press Enter and confirm with your password if prompted to do so</li>
+      </ol>
+
+      <h2>4. My issue isn’t listed!</h2>
+      <ol>
+        <li>Check out the <a href="/frequently-asked-questions/">FAQ section</a></li>
+        <li><a href={CONTACT_HREF}>Get in touch</a> with the Dev</li>
+      </ol>
+    </Prose>
+  </section>
+</BaseLayout>

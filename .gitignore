@@ -1,0 +1,19 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# mirrored installers - ~250MB, these live in Cloudflare R2, not in git.
+# Recreate with: npm run mirror-assets
+binaries/
+
+# environment
+.env
+.env.production
+
+# editor / os
+.DS_Store
+.vscode/
+*.log

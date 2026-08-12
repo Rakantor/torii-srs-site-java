@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Slideshow from '../components/Slideshow.astro';
+import FeatureIcon from '../components/FeatureIcon.astro';
+
+// Copy is verbatim from the original site.
+const features = [
+  {
+    title: 'Study Modes',
+    icon: 'study',
+    body: 'Preparing for the JLPT? Want to focus on common kana-only words? Torii offers four study modes so you can learn in the way that fits your goals.',
+  },
+  {
+    title: 'Review Methods',
+    icon: 'directions',
+    body: 'Prefer reviewing Japanese → English, English → Japanese, or a mix of both? Torii lets you choose the style that works best for you.',
+  },
+  {
+    title: 'Audio Reviews',
+    icon: 'audio',
+    body: 'Train your listening skills with Torii’s Audio Review Mode.',
+  },
+  {
+    title: 'Custom Vocab',
+    icon: 'note',
+    body: 'Feel free to add your own words & phrases and memorize them by utilizing Torii’s SRS.',
+  },
+  {
+    title: 'Endless Practice',
+    icon: 'thought',
+    body: 'If you feel like it, you can study outside of the SRS schedule. The Endless Practice feature is highly customizable.',
+  },
+  {
+    title: 'Font Randomizer',
+    icon: 'font',
+    body: 'In real life, you are exposed to digital as well as hand writing. That’s why Torii lets you choose to randomize fonts in your review sessions.',
+  },
+  {
+    title: 'Progress Tracking',
+    icon: 'stats',
+    body: 'Torii saves some useful information about your learning progress, including the amount of learned vocabulary, correct answer rate and time spent studying.',
+  },
+  {
+    title: 'Cross-Platform',
+    icon: 'desktop',
+    body: 'Torii SRS is available for Windows, Mac and Linux, as well as Android devices.',
+  },
+  {
+    // Original had a stray double period at the end of this sentence.
+    title: 'Cloud Synchronisation',
+    icon: 'cloudSync',
+    body: 'Your account data is safely stored in our Cloud and automatically synced across all your devices.',
+  },
+];
+---
+
+<BaseLayout
+  title="Torii SRS – Japanese vocabulary learning tool"
+  description="Torii helps you learn the 10,000 most commonly used Japanese words—effectively and in a way that truly sticks. Free for Windows, Mac, Linux and Android."
+>
+  <!--
+    Hero. The devices are a transparent cut-out (see scripts/cut-hero-devices.py) rather
+    than the original baked-in background image, so the copy and the artwork can be sized
+    independently. The section carries the source image's own gradient.
+  -->
+  <section class="hero flex min-h-[calc(100svh-var(--header-h))] items-center">
+    <!-- Wider than the rest of the page, and weighted toward the artwork, so the
+         mockup fills the space beside the copy without shrinking the text column. -->
+    <div class="mx-auto w-full max-w-7xl px-5 py-14">
+      <div class="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-6">
+        <!-- Layers reveal in sequence on load, as the original slider's did. -->
+        <div>
+          <h1 class="font-display text-5xl leading-[1.1] sm:text-6xl">
+            <span class="block font-light text-ink/85" data-reveal>Level up your</span>
+            <span class="block font-bold text-ink" data-reveal style="--reveal-delay: 0.15s">
+              Japanese Skills
+            </span>
+          </h1>
+
+          <p
+            class="mt-6 max-w-sm text-lg leading-relaxed text-body sm:text-xl"
+            data-reveal
+            style="--reveal-delay: 0.3s"
+          >
+            Learn the <strong class="font-semibold text-ink">Core 10k</strong> vocabulary effectively
+            with spaced repetition. For free.
+          </p>
+
+          <div data-reveal style="--reveal-delay: 0.45s">
+            <a
+              href="/download/"
+              class="mt-9 inline-block rounded-full bg-accent px-10 py-4 font-display text-sm font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-accent-dark"
+            >
+              Free Download
+            </a>
+          </div>
+        </div>
+
+        <img
+          src="/images/hero-devices.png"
+          alt="Torii SRS running on a laptop and an Android phone"
+          width="821"
+          height="512"
+          fetchpriority="high"
+          class="mx-auto w-full max-w-[34rem] md:max-w-none"
+          data-reveal
+          style="--reveal-delay: 0.2s"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro: copy on the left, screenshot slideshow on the right, as on the original. -->
+  <section class="py-16 sm:py-20">
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-12 px-5 lg:grid-cols-2 lg:gap-16"
+    >
+      <div data-reveal>
+        <div class="space-y-4 text-lg leading-relaxed text-body">
+          <p>
+            <strong class="font-medium text-ink"
+              >Torii helps you learn the 10,000 most commonly used Japanese words—effectively and in
+              a way that truly sticks.</strong
+            >
+          </p>
+          <p>
+            We use <strong class="font-medium text-ink">spaced repetition</strong>, a proven learning
+            method that spaces out reviews over time so you remember more with less effort.
+          </p>
+          <p>
+            But Torii is <strong class="font-medium text-ink">more than just flashcards</strong>.
+          </p>
+          <p>
+            While many vocabulary apps let you guess from multiple-choice options, Torii asks you to
+            <strong class="font-medium text-ink">type the answer yourself</strong>. It’s a simple
+            change that makes a big difference—because when you recall a word on your own, you truly
+            learn it.
+          </p>
+          <p>
+            <strong class="font-medium text-ink"
+              >In short: Torii helps Japanese vocabulary stay in your memory for the long
+              term.</strong
+            >
+          </p>
+        </div>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 0.2s">
+        <Slideshow />
+      </div>
+    </div>
+  </section>
+
+  <!-- Features. Dark section, as on the original site (lighter than the footer). -->
+  <section id="features" class="bg-dark-soft py-16 sm:py-24">
+    <div class="mx-auto max-w-6xl px-5">
+      <header class="mb-14 text-center" data-reveal>
+        <p class="font-display text-xs font-bold tracking-[0.2em] text-accent uppercase">
+          Feature Overview
+        </p>
+        <h2 class="mt-3 font-display text-3xl font-bold text-white sm:text-4xl">
+          So how does <span class="text-accent">Torii work?</span>
+        </h2>
+      </header>
+
+      <ul class="grid gap-x-10 gap-y-11 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          features.map((feature, i) => (
+            /* Staggered across each row of three: 0s, 0.3s, 0.6s. */
+            <li data-reveal style={`--reveal-delay: ${(i % 3) * 0.3}s`}>
+              <FeatureIcon name={feature.icon} class="mb-4 h-12 w-12 text-accent" />
+              <h3 class="mb-2 font-display text-lg font-bold text-white">{feature.title}</h3>
+              <p class="text-white/70">{feature.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="mt-16 text-center" data-reveal>
+        <a
+          href="/download/"
+          class="inline-block rounded-full bg-accent px-9 py-3.5 font-display text-sm font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-accent-dark"
+        >
+          Free Download
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* The gradient the original hero image had baked into it. */
+  .hero {
+    background: linear-gradient(to bottom, #f4f4f4, #dfe0e2);
+  }
+</style>

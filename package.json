@@ -1,0 +1,25 @@
+{
+  "name": "torii-srs-site",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static marketing site for Torii SRS (torii-srs.com)",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "mirror-assets": "./scripts/mirror-wp-assets.sh"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/raleway": "^5.2.10",
+    "@fontsource/roboto": "^5.2.10",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.1",
+    "tailwindcss": "^4.3.3"
+  }
+}

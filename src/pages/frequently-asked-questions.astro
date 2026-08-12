@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { CONTACT_HREF } from '../data/site';
+
+// SRS stage progression, from the original page's plain-text block.
+const srsStages = [
+  { from: 'Lesson', wait: '', to: 'Rookie 1' },
+  { from: 'Rookie 1', wait: '4 hours', to: 'Rookie 2' },
+  { from: 'Rookie 2', wait: '8 hours', to: 'Rookie 3' },
+  { from: 'Rookie 3', wait: '24 hours', to: 'Rookie 4' },
+  { from: 'Rookie 4', wait: '48 hours', to: 'Amateur 1' },
+  { from: 'Amateur 1', wait: '7 days', to: 'Amateur 2' },
+  { from: 'Amateur 2', wait: '14 days', to: 'Expert' },
+  { from: 'Expert', wait: '30 days', to: 'Master' },
+  { from: 'Master', wait: '120 days', to: 'Sensei' },
+];
+---
+
+<BaseLayout
+  title="Frequently Asked Questions – Torii SRS"
+  description="Answers to common questions about Torii SRS: getting started, SRS stage timings, platform support and Torii Prime."
+>
+  <PageHeader title="Frequently Asked Questions" />
+
+  <section class="mx-auto max-w-3xl px-5 py-14 faq">
+    <h2 class="font-display text-2xl font-bold text-ink">Getting Started</h2>
+
+    <details name="faq">
+      <summary>Can I use Torii without any prior knowledge of Japanese?</summary>
+      <div>
+        <p>
+          You will want to learn <strong>Hiragana &amp; Katakana</strong> beforehand, as Torii
+          refrains from using Romaji. I recommend <a
+            href="https://www.tofugu.com/japanese/learn-hiragana/"
+            target="_blank"
+            rel="noopener noreferrer"><strong>Tofugu’s guide</strong></a
+          >.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Do I have to install a Japanese keyboard (IME) to use Torii?</summary>
+      <div>
+        <p>
+          <strong>No</strong>, Torii has an inbuilt Romaji to Kana converter. No need to download
+          anything but the application itself.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>How do I create an account?</summary>
+      <div>
+        <p>
+          First, <strong>download Torii</strong> from the <a href="/download/"
+            ><strong>download page</strong></a
+          >. Second, start the application and click on “<strong>Don’t have an account?</strong>”.
+          Enter your email address and password and click “<strong>Create Account</strong>”. Done!
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Why do you ask for my email address?</summary>
+      <div>
+        <p>
+          We store all user data in the cloud, your email address serves as your <strong
+            >user name</strong
+          >. If you need to <strong>reset a forgotten password</strong>, we’ll send you a link to
+          create a new password to your email address.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>How can I reset my password?</summary>
+      <div>
+        <p>
+          You can change your password anytime in the ‘<strong>Settings</strong>’ menu. If you forgot
+          your password, click on “<strong>Forgot your password?</strong>” on the login window.
+        </p>
+      </div>
+    </details>
+
+    <h2 class="mt-12 font-display text-2xl font-bold text-ink">General</h2>
+
+    <details name="faq">
+      <summary>How long does it take to level up a word?</summary>
+      <div>
+        <p>
+          Leveling up a word to the highest SRS stage (Sensei) takes at least 6 months. The actual
+          timings are as follows:
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-black/10">
+                <th class="py-2 pr-4 text-left font-display text-ink">Stage</th>
+                <th class="py-2 pr-4 text-left font-display text-ink">Wait</th>
+                <th class="py-2 text-left font-display text-ink">Next stage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                srsStages.map((stage) => (
+                  <tr class="border-b border-black/5">
+                    <td class="py-2 pr-4">{stage.from}</td>
+                    <td class="py-2 pr-4 font-medium text-ink">{stage.wait || '—'}</td>
+                    <td class="py-2">{stage.to}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mt-4">
+          Whenever you get a word correct: +1 SRS stage.<br />
+          If the word is Rookie 4 or lower and you get it wrong: -1 SRS stage.<br />
+          If it’s Amateur 1 or higher and you get it incorrect: -2 SRS stages.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Why is there no iOS App? Is there one in the making?</summary>
+      <div>
+        <p>
+          Unfortunately, there are currently no plans for an iOS App. The annual fees of Apple’s
+          Developer Program are just too high for a free App like Torii.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Will there be a Web version?</summary>
+      <div>
+        <p>Maybe. At the moment there is no work in progress, though.</p>
+      </div>
+    </details>
+
+    <h2 class="mt-12 font-display text-2xl font-bold text-ink">Technical</h2>
+
+    <details name="faq">
+      <summary>Desktop: Can I run Torii on my Chromebook?</summary>
+      <div>
+        <p>
+          Yes, but it can be a little bit complicated to set up Java on Chrome OS. A quick web search
+          brings up multiple articles with instructions on how you can do it.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>
+        Desktop: I can’t start Torii, it says “GdxRuntimeException: Couldn’t create window”?
+      </summary>
+      <div>
+        <p>
+          It means your graphics card might be outdated. Try updating its drivers. This usually
+          happens when using virtualization software (VirtualBox, VMWare, …) or on company laptops
+          with restricted control.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Android: Auto-complete isn’t working?</summary>
+      <div>
+        <p>
+          Torii SRS for Android isn’t a native Android App. Because of that there are some
+          limitations in terms of usability.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Android: My keyboard isn’t typing any letters?</summary>
+      <div>
+        <p>
+          Torii SRS for Android isn’t a native Android App. Because of that there are some
+          limitations in terms of usability. Your phone’s standard-keyboard should be compatible with
+          Torii (Gboard, SwiftKey, etc).
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Android: Will there be a native Android app?</summary>
+      <div>
+        <p>There is currently no native Android app in the works.</p>
+      </div>
+    </details>
+
+    <h2 class="mt-12 font-display text-2xl font-bold text-ink">Torii Prime</h2>
+
+    <details name="faq">
+      <summary>After donating, how long does it take for my account to be upgraded?</summary>
+      <div>
+        <p>
+          Your account will be upgraded immediately. If not, <a href={CONTACT_HREF}
+            >contact the developer</a
+          >.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>Do subscriptions auto-renew?</summary>
+      <div>
+        <p>
+          No. When your subscription ends, you will have to donate again manually if you want to keep
+          access to your Prime content.
+        </p>
+      </div>
+    </details>
+
+    <details name="faq">
+      <summary>What happens when my subscription ends?</summary>
+      <div>
+        <p>
+          Your Prime content (custom vocab, Practice lists, etc) will be preserved in the Cloud,
+          however you won’t be able to access it unless you renew your subscription.
+        </p>
+      </div>
+    </details>
+  </section>
+</BaseLayout>
+
+<style>
+  .faq details {
+    border-bottom: 1px solid rgb(0 0 0 / 0.08);
+  }
+
+  .faq summary {
+    cursor: pointer;
+    padding: 1rem 2rem 1rem 0;
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-ink);
+    list-style: none;
+  }
+
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq summary::after {
+    content: '';
+    position: absolute;
+    right: 0.4rem;
+    top: 50%;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--color-accent-deep);
+    border-bottom: 2px solid var(--color-accent-deep);
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .faq details[open] summary::after {
+    transform: translateY(-30%) rotate(225deg);
+  }
+
+  .faq summary:hover {
+    color: var(--color-accent-deep);
+  }
+
+  .faq details > div {
+    padding: 0 0 1.25rem;
+    line-height: 1.75;
+  }
+
+  .faq details a {
+    color: var(--color-accent-deep);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .faq details strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+</style>

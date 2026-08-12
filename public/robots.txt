@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://torii-srs.com/sitemap-index.xml

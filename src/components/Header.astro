@@ -1,0 +1,70 @@
+---
+import { CONTACT_HREF } from '../data/site';
+
+const { pathname } = Astro.url;
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/#features', label: 'Features' },
+  { href: CONTACT_HREF, label: 'Contact' },
+];
+
+// Only the Home link can be "current" - Features is an anchor and Contact is a mailto.
+const isActive = (href: string) => href === '/' && pathname === '/';
+---
+
+<header class="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur-sm">
+  <nav
+    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3"
+    aria-label="Main"
+  >
+    <a href="/" class="flex items-center gap-2.5 shrink-0">
+      <img src="/images/logo.png" alt="" width="36" height="36" class="h-9 w-9" />
+      <span class="font-display text-lg font-bold tracking-tight text-ink">Torii SRS</span>
+    </a>
+
+    <!-- Checkbox toggle keeps the mobile menu working without any JavaScript. -->
+    <input type="checkbox" id="nav-toggle" class="peer hidden" />
+    <label
+      for="nav-toggle"
+      class="cursor-pointer rounded p-2 text-ink md:hidden"
+      aria-label="Toggle menu"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" />
+      </svg>
+    </label>
+
+    <ul
+      {/* bg-white is for the mobile dropdown panel; on desktop it must go transparent,
+          otherwise it paints an opaque block over the header's translucent backdrop
+          and shows as a lighter patch once content scrolls underneath. */}
+      class="absolute inset-x-0 top-full hidden flex-col gap-1 border-b border-black/5 bg-white px-5 py-3 shadow-sm peer-checked:flex md:static md:flex md:flex-row md:items-center md:gap-7 md:border-0 md:bg-transparent md:p-0 md:shadow-none"
+    >
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              class:list={[
+                'block py-2 text-sm font-medium tracking-wide transition-colors hover:text-accent-deep md:py-0',
+                isActive(link.href) ? 'text-accent-deep' : 'text-ink',
+              ]}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="md:ml-1">
+        <a
+          href="/download/"
+          class="mt-1 inline-block rounded-full bg-accent px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-dark md:mt-0"
+        >
+          Free Download
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
