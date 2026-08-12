@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Cloudflare Pages serves dist/404.html with a real 404 status for unmatched paths.
+// Without this file it falls back to index.html with a 200, which makes every
+// nonexistent URL look like a duplicate of the home page to search engines.
+---
+
+<BaseLayout
+  title="Page not found – Torii SRS"
+  description="That page doesn’t exist. Head back to the Torii SRS home page or the download page."
+>
+  <section class="mx-auto flex min-h-[60svh] max-w-2xl flex-col items-center justify-center px-5 py-20 text-center">
+    <p class="font-display text-6xl font-bold text-accent">404</p>
+
+    <h1 class="mt-4 font-display text-3xl font-bold text-ink sm:text-4xl">Page not found</h1>
+
+    <p class="mt-4 text-lg text-body">
+      That page doesn’t exist, or it moved when this site was rebuilt.
+    </p>
+
+    <div class="mt-9 flex flex-wrap justify-center gap-3">
+      <a
+        href="/"
+        class="rounded-full bg-accent px-8 py-3 font-display text-sm font-bold tracking-widest text-white uppercase shadow-md transition-colors hover:bg-accent-dark"
+      >
+        Home
+      </a>
+      <a
+        href="/download/"
+        class="rounded-full border border-accent-deep px-8 py-3 font-display text-sm font-bold text-accent-deep transition-colors hover:bg-accent-deep hover:text-white"
+      >
+        Download
+      </a>
+    </div>
+
+    <ul class="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+      <li><a href="/frequently-asked-questions/" class="text-body underline-offset-2 hover:text-accent-deep hover:underline">FAQ</a></li>
+      <li><a href="/release-notes/" class="text-body underline-offset-2 hover:text-accent-deep hover:underline">Release Notes</a></li>
+      <li><a href="/mac-help/" class="text-body underline-offset-2 hover:text-accent-deep hover:underline">macOS Help</a></li>
+      <li><a href="/about/" class="text-body underline-offset-2 hover:text-accent-deep hover:underline">About</a></li>
+    </ul>
+  </section>
+</BaseLayout>
