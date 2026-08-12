@@ -1,39 +1,23 @@
 /**
  * Single source of truth for every downloadable binary.
  *
- * The installers are moving off WordPress (which is being retired) and into a
- * Cloudflare R2 bucket fronted by dl.torii-srs.com. Until that upload happens,
- * `USE_R2` stays false and the site keeps serving the existing WordPress URLs.
- *
- * To cut over: upload the mirrored files (see scripts/mirror-wp-assets.sh and
- * R2-UPLOAD.md), then flip USE_R2 to true. That is the whole migration.
+ * The installers are served from a Cloudflare R2 bucket behind dl.torii-srs.com,
+ * not from this site. See R2-UPLOAD.md for publishing a new release.
  */
-
-/**
- * Live in R2 since 2026-08-12. All 7 objects were verified byte-identical to the
- * WordPress originals (sha256, see assets-manifest.txt) before this was switched on.
- */
-export const USE_R2 = true;
 
 /** Public base for the R2 bucket. No trailing slash. */
 export const R2_BASE = 'https://dl.torii-srs.com';
-
-/** Where the WordPress uploads directory currently serves from. No trailing slash. */
-export const WP_BASE = 'https://torii-srs.com/wp/wp-content/uploads';
 
 export interface Binary {
   /** Button label. */
   label: string;
   /** Path within the R2 bucket. */
-  r2Key: string;
-  /** Existing path under the WordPress uploads directory. */
-  wpPath: string;
-  /** Size in bytes, from the mirror manifest. Used for the "(48 MB)" hint. */
+  key: string;
+  /** Size in bytes, used for the "(49.6 MB)" hint next to each button. */
   bytes: number;
 }
 
-export const url = (b: Binary): string =>
-  USE_R2 ? `${R2_BASE}/${b.r2Key}` : `${WP_BASE}/${b.wpPath}`;
+export const url = (b: Binary): string => `${R2_BASE}/${b.key}`;
 
 /** Human-readable size, e.g. "49.6 MB". */
 export const size = (b: Binary): string => `${(b.bytes / 1_000_000).toFixed(1)} MB`;
@@ -45,30 +29,26 @@ export const latest = {
   windows: [
     {
       label: 'Download (x64)',
-      r2Key: 'v1.4.9/ToriiSRS-winX64.zip',
-      wpPath: '2025/11/ToriiSRS-winX64.zip',
+      key: 'v1.4.9/ToriiSRS-winX64.zip',
       bytes: 49_596_454,
     },
   ],
   macos: [
     {
       label: 'Download (Apple Silicon)',
-      r2Key: 'v1.4.9/ToriiSRS-1.4.9-macM1.dmg',
-      wpPath: '2025/11/ToriiSRS-1.4.9-macM1.dmg',
+      key: 'v1.4.9/ToriiSRS-1.4.9-macM1.dmg',
       bytes: 51_530_296,
     },
     {
       label: 'Download (Intel)',
-      r2Key: 'v1.4.9/ToriiSRS-1.4.9-macX64.dmg',
-      wpPath: '2025/11/ToriiSRS-1.4.9-macX64.dmg',
+      key: 'v1.4.9/ToriiSRS-1.4.9-macX64.dmg',
       bytes: 52_801_544,
     },
   ],
   linux: [
     {
       label: 'Download (x64)',
-      r2Key: 'v1.4.9/ToriiSRS-linuxX64.zip',
-      wpPath: '2025/11/ToriiSRS-linuxX64.zip',
+      key: 'v1.4.9/ToriiSRS-linuxX64.zip',
       bytes: 51_323_920,
     },
   ],
@@ -79,20 +59,17 @@ export const LEGACY_VERSION = '1.4.8';
 export const legacy: Binary[] = [
   {
     label: 'Windows',
-    r2Key: 'v1.4.8/Torii-SRS-v1.4.8_win.zip',
-    wpPath: '2020/05/Torii-SRS-v1.4.8_win.zip',
+    key: 'v1.4.8/Torii-SRS-v1.4.8_win.zip',
     bytes: 17_529_145,
   },
   {
     label: 'macOS',
-    r2Key: 'v1.4.8/Torii-SRS-v1.4.8.dmg',
-    wpPath: '2020/05/Torii-SRS-v1.4.8.dmg',
+    key: 'v1.4.8/Torii-SRS-v1.4.8.dmg',
     bytes: 19_083_713,
   },
   {
     label: 'Linux',
-    r2Key: 'v1.4.8/Torii-SRS-v1.4.8_linux.zip',
-    wpPath: '2020/05/Torii-SRS-v1.4.8_linux.zip',
+    key: 'v1.4.8/Torii-SRS-v1.4.8_linux.zip',
     bytes: 17_495_846,
   },
 ];

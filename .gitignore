@@ -10,8 +10,8 @@ node_modules/
 package-lock.json
 yarn.lock
 
-# mirrored installers - ~250MB, these live in Cloudflare R2, not in git.
-# Recreate with: npm run mirror-assets
+# local copies of the installers - ~250MB. These are served from Cloudflare R2,
+# never from git or the web server. See R2-UPLOAD.md.
 binaries/
 
 # environment

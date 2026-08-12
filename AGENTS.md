@@ -23,37 +23,40 @@ pnpm build      # -> dist/
 pnpm preview
 ```
 
-To test redirects, use the Cloudflare Pages emulator — **`astro preview` does not read
-`public/_redirects`**, so bare paths like `/mac-help` will 404 under it and work in production:
-
-```bash
-npx wrangler pages dev dist
-```
-
 ## Deployment
 
-Cloudflare Pages. Build `pnpm build`, output `dist`. `public/_redirects` and `public/_headers`
-are copied into `dist/` and picked up automatically.
+Apache, serving the document root of the existing torii-srs.com server — the same host as the
+Torii API. Build with `pnpm build`, upload the contents of `dist/`, and install `deploy/htaccess`
+there as `.htaccess` (redirects, 404, caching, security headers).
+
+**The document root is shared and not owned by this repo.** `api/`, `vocab.json`, `version`,
+`knowledge-base`, `system-notification`, `transaction-*.html`, `img_files/`, `icns/`,
+`font_files/` and `audio_files/` all live there and must survive any deploy. Never
+`rsync --delete` into it without excluding them.
+
+`/api/v1/` and `/api/v2/` each have their own `.htaccess` with a PHP front controller. Because
+they switch on their own `RewriteEngine`, they do not inherit the document root's rewrite rules —
+but they *do* inherit `Header` and `ErrorDocument` directives.
 
 ## Things that will bite you
 
 - **URL parity is load-bearing.** `trailingSlash: 'always'` + `build.format: 'directory'` keeps
-  every URL identical to the old WordPress ones (`/mac-help/`). `_redirects` maps the bare forms
-  and all the old WP URLs (dated changelog posts, `/home-startup/`, `/category/changelog/`).
-  Don't change the URL shape.
+  every URL identical to the old WordPress ones (`/mac-help/`). Apache's `DirectorySlash` handles
+  the bare form, and `deploy/htaccess` maps all the old WP URLs (dated changelog posts,
+  `/home-startup/`, `/category/changelog/`, the installer paths). Don't change the URL shape.
 - **`compressHTML: false` is deliberate.** Astro 7 defaults it to `'jsx'`, which strips whitespace
   around inline elements and silently fuses words in this site's copy
   (`<em>spaced repetition</em>, a proven…` → `spaced repetitiona proven…`). Leave it off.
 - **The Astro 7 compiler rejects malformed HTML.** FAQ/mac-help/About are ports of sloppy
   WordPress markup — make sure anything you paste in is well-formed.
-- **Binaries must never be served from this site.** Cloudflare Pages enforces a 25 MB per-file
-  limit and the installers are ~50 MB each. They live in Cloudflare R2 behind `dl.torii-srs.com`.
-  `src/data/downloads.ts` is the single source of truth for every download URL and version.
+- **Binaries are not served from this site.** ~250 MB of installers live in Cloudflare R2 behind
+  `dl.torii-srs.com`, off the origin and on a CDN. `src/data/downloads.ts` is the single source of
+  truth for every download URL and version. Don't commit installers to the repo.
 - **Reveal animations must fail open.** The hidden state is scoped to a `.js-anim` class set only
   when JS runs and `prefers-reduced-motion` is not set. Never write a bare `opacity: 0` initial
   state — without that guard, content becomes permanently invisible with no way to reveal it.
 - `src/data/privacy-content.html` is a pre-cleaned fragment rendered via `set:html`. Edit it
-  directly; don't try to regenerate it from WordPress, which is being decommissioned.
+  directly — WordPress is gone, so it cannot be regenerated from the original.
 
 ## Content rules
 
@@ -64,13 +67,6 @@ rather than changing it.
 
 Adding a release: drop `src/content/releases/vX-Y-Z.md` with `version`, `date`, `released`
 frontmatter — it appears on `/release-notes/` automatically, newest first.
-
-## Scripts
-
-- `scripts/mirror-wp-assets.sh` — re-pulls every image and installer from WordPress. Historical;
-  WordPress is being switched off.
-- `scripts/cut-hero-devices.py` — regenerates `public/images/hero-devices.png` (transparent device
-  mockups) from `public/images/hero.png`.
 
 ## Git conventions
 
