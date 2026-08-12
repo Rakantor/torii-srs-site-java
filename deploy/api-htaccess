@@ -1,0 +1,16 @@
+# Install as api/.htaccess on the server.
+#
+# The docroot .htaccess sets `ErrorDocument 404 /404.html` for the whole host.
+# Without this, an API request that 404s would receive the website's HTML error
+# page instead of whatever the API normally returns - which breaks clients that
+# parse the body as JSON.
+
+ErrorDocument 404 default
+ErrorDocument 403 default
+ErrorDocument 500 default
+
+# The docroot sets caching and security headers for the site. Those are aimed at
+# static pages, not API responses; drop the site's framing rule here.
+<IfModule mod_headers.c>
+  Header unset X-Frame-Options
+</IfModule>

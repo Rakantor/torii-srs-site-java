@@ -78,6 +78,13 @@ fi
 rm -f /tmp/torii-api-probe
 
 echo
+echo "Non-site files sharing the docroot must survive the deploy"
+for p in /vocab.json /version /knowledge-base /system-notification \
+         /transaction-success.html /transaction-cancel.html; do
+  check "app resource" 200 "$p"
+done
+
+echo
 echo "Binaries on R2"
 for k in v1.4.9/ToriiSRS-winX64.zip v1.4.9/ToriiSRS-1.4.9-macM1.dmg v1.4.8/Torii-SRS-v1.4.8.dmg; do
   code=$(curl -sIL -o /dev/null -w '%{http_code}' --max-time 30 "https://dl.torii-srs.com/$k")

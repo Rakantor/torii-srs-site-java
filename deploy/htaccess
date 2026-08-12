@@ -8,11 +8,17 @@
 #   sudo a2enmod rewrite headers expires dir && sudo systemctl reload apache2
 # And `AllowOverride All` for this directory in the vhost.
 
-DirectoryIndex index.html
+# index.php is kept in the list so anything else on this host that relies on a
+# PHP index (e.g. /api/) keeps working. The WordPress index.php at the docroot
+# should be deleted - otherwise it wins over index.html and still boots WP.
+DirectoryIndex index.html index.php
 
 # mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/
 # because each page is a directory containing index.html. Nothing to add here.
 
+# Applies to the whole host, so /api/ 404s would render this HTML page too.
+# deploy/api-htaccess resets that for the API directory - install it as
+# api/.htaccess so API clients keep getting the API's own responses.
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
