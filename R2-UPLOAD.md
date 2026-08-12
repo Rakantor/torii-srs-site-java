@@ -1,10 +1,14 @@
-# Moving the installers to Cloudflare R2
+# Installers on Cloudflare R2
 
-The 7 installers (~250 MB) currently live in the WordPress uploads directory. They must move
-before WordPress is retired, because **Cloudflare Pages cannot host them** — it enforces a 25 MB
-per-file limit and these files are ~50 MB each.
+> **Status: done (2026-08-12).** All 7 installers are live in R2 behind `dl.torii-srs.com`, and
+> `USE_R2` is `true` in `src/data/downloads.ts`. Every object was verified byte-identical to the
+> WordPress original by sha256 before the site was switched over. The steps below are kept as the
+> procedure for publishing a new release.
 
-They are already mirrored locally by `npm run mirror-assets` into `binaries/` (gitignored), with
+The installers cannot be served from the site itself — **Cloudflare Pages enforces a 25 MB
+per-file limit** and these are ~50 MB each. That is why they live in R2.
+
+They are also mirrored locally by `npm run mirror-assets` into `binaries/` (gitignored), with
 sha256 checksums in `assets-manifest.txt`.
 
 ## 1. Create the bucket
@@ -57,7 +61,8 @@ In [`src/data/downloads.ts`](src/data/downloads.ts):
 export const USE_R2 = true;
 ```
 
-That single constant switches all 7 links. Rebuild and deploy.
+That single constant switches all 7 links. Rebuild and deploy. (Already done — setting it back to
+`false` would repoint the site at WordPress, which is being retired.)
 
 ## 5. Verify
 
@@ -68,7 +73,8 @@ for f in v1.4.9/ToriiSRS-winX64.zip v1.4.9/ToriiSRS-1.4.9-macM1.dmg v1.4.9/Torii
 All 7 must return `200`. To confirm the uploads are byte-identical to what WordPress served,
 re-run `sha256sum` on the downloaded files and compare against `assets-manifest.txt`.
 
-## 6. Optional: redirect the old URLs
+## 6. Old WordPress URLs
 
-Once R2 is live, uncomment the last two rules in [`public/_redirects`](public/_redirects) so any
-old link to `/wp/wp-content/uploads/...` forwards to R2 instead of 404ing.
+[`public/_redirects`](public/_redirects) 301s `/wp/wp-content/uploads/2025/11/*` and `/2020/05/*`
+onto the matching R2 path, so links published while the site ran on WordPress keep working after
+it is switched off. These rules are active.

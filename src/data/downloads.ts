@@ -9,8 +9,11 @@
  * R2-UPLOAD.md), then flip USE_R2 to true. That is the whole migration.
  */
 
-/** Flip to true once the files are live in R2. */
-export const USE_R2 = false;
+/**
+ * Live in R2 since 2026-08-12. All 7 objects were verified byte-identical to the
+ * WordPress originals (sha256, see assets-manifest.txt) before this was switched on.
+ */
+export const USE_R2 = true;
 
 /** Public base for the R2 bucket. No trailing slash. */
 export const R2_BASE = 'https://dl.torii-srs.com';

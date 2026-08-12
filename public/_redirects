@@ -41,7 +41,7 @@
 /wp-login.php             /                              301
 /feed/                    /release-notes/                301
 
-# Binaries moved out of the WordPress uploads directory into R2.
-# Enable this once USE_R2 is switched on in src/data/downloads.ts:
-# /wp/wp-content/uploads/2025/11/*  https://dl.torii-srs.com/v1.4.9/:splat  301
-# /wp/wp-content/uploads/2020/05/*  https://dl.torii-srs.com/v1.4.8/:splat  301
+# Binaries now live in R2. These keep old inbound links to the WordPress uploads
+# directory working after that site is switched off.
+/wp/wp-content/uploads/2025/11/*  https://dl.torii-srs.com/v1.4.9/:splat  301
+/wp/wp-content/uploads/2020/05/*  https://dl.torii-srs.com/v1.4.8/:splat  301
