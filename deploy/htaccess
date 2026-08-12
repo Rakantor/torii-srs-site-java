@@ -1,0 +1,96 @@
+# Apache config for the static Torii SRS site.
+#
+# Deploy this as `.htaccess` in the document root alongside the contents of dist/.
+# It replaces public/_redirects and public/_headers, which are Cloudflare Pages
+# formats and are ignored by Apache.
+#
+# Requires: mod_rewrite, mod_headers, mod_expires, mod_dir
+#   sudo a2enmod rewrite headers expires dir && sudo systemctl reload apache2
+# And `AllowOverride All` for this directory in the vhost.
+
+DirectoryIndex index.html
+
+# mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/
+# because each page is a directory containing index.html. Nothing to add here.
+
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# Redirects from the old WordPress URLs
+# ---------------------------------------------------------------------------
+<IfModule mod_alias.c>
+  # WordPress home slug
+  Redirect 301 /home-startup/ /
+  Redirect 301 /home-startup  /
+
+  # Individual changelog posts are now anchors on one page
+  Redirect 301 /2025/11/20/version-1-4-9/ /release-notes/#v1-4-9
+  Redirect 301 /2020/05/07/version-1-4-8/ /release-notes/#v1-4-8
+  Redirect 301 /2020/05/03/version-1-4-7/ /release-notes/#v1-4-7
+  Redirect 301 /2019/12/13/version-1-4-5/ /release-notes/#v1-4-5
+  Redirect 301 /2019/09/10/version-1-4-1/ /release-notes/#v1-4-1
+  Redirect 301 /2019/09/09/version-1-4-0/ /release-notes/#v1-4-0
+  Redirect 301 /2019/04/26/version-1-3-5/ /release-notes/#v1-3-5
+  Redirect 301 /2019/03/18/version-1-3-0/ /release-notes/#v1-3-0
+  Redirect 301 /2019/01/23/version-1-2-6/ /release-notes/#v1-2-6
+  Redirect 301 /2018/12/22/version-1-2-5/ /release-notes/#v1-2-5
+  Redirect 301 /2018/10/18/version-1-2-0/ /release-notes/#v1-2-0
+  Redirect 301 /2018/06/24/version-1-1-1/ /release-notes/#v1-1-1
+  Redirect 301 /2018/06/23/version-1-1-0-june-23-2018/ /release-notes/#v1-1-0
+  Redirect 301 /2018/06/10/version-1-0-1-june-10-2018/ /release-notes/#v1-0-1
+
+  # Archives, pagination, author
+  Redirect 301 /category/changelog/ /release-notes/
+  Redirect 301 /author/rakantor/    /about/
+  Redirect 301 /feed/               /release-notes/
+  RedirectMatch 301 ^/release-notes/page/.*$ /release-notes/
+
+  # Old admin endpoints
+  RedirectMatch 301 ^/wp-admin(/.*)?$ /
+  Redirect 301 /wp-login.php /
+
+  # Installers moved to Cloudflare R2. These keep links published while the site
+  # ran on WordPress working after /wp/ is deleted.
+  RedirectMatch 301 ^/wp/wp-content/uploads/2025/11/(.*)$ https://dl.torii-srs.com/v1.4.9/$1
+  RedirectMatch 301 ^/wp/wp-content/uploads/2020/05/(.*)$ https://dl.torii-srs.com/v1.4.8/$1
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Caching
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  # Fingerprinted build output never changes under a given name.
+  SetEnvIf Request_URI "^/_astro/" TORII_IMMUTABLE=1
+  Header set Cache-Control "public, max-age=31536000, immutable" env=TORII_IMMUTABLE
+
+  # Images are stable but not fingerprinted.
+  SetEnvIf Request_URI "^/images/" TORII_IMAGE=1
+  Header set Cache-Control "public, max-age=86400, stale-while-revalidate=604800" env=TORII_IMAGE
+
+  # Security headers, matching what Cloudflare Pages was serving.
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Housekeeping
+# ---------------------------------------------------------------------------
+
+# These are Cloudflare Pages artefacts; they do nothing here and needn't be public.
+<FilesMatch "^(_redirects|_headers)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+    application/javascript application/json image/svg+xml
+</IfModule>
+
+# Fonts are served cross-origin by nothing right now, but this avoids surprises
+# if the site is ever fronted by a CDN on another hostname.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(woff2?|ttf|otf)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
