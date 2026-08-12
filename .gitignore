@@ -2,6 +2,9 @@
 dist/
 .astro/
 
+# local Miniflare state from `wrangler pages dev` - scratch only, regenerated on demand
+.wrangler/
+
 # dependencies
 node_modules/
 
