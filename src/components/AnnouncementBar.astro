@@ -1,0 +1,59 @@
+---
+/**
+ * Points visitors at the new web app.
+ *
+ * Sits above the header inside BaseLayout's sticky wrapper, so the two pin to the top
+ * of the viewport together and the bar stays visible the whole way down the page.
+ *
+ * Its height is pinned to --banner-h, which the full-screen home hero subtracts along
+ * with the header. Copy that wraps to a second line breaks that math - keep each
+ * variant to one line at its breakpoint: the long sentence needs ~680px of bar, which
+ * is why it waits for md rather than sm, and the short one has to survive a 320px screen.
+ *
+ * The copy here is new, not ported from the old WordPress site, so the "verbatim copy"
+ * rule in AGENTS.md does not apply to it.
+ */
+import { WEB_APP_HREF } from '../data/site';
+---
+
+<a
+  href={WEB_APP_HREF}
+  class="group block bg-footer-deep bg-[radial-gradient(70%_180%_at_50%_0%,rgba(71,201,229,0.28),transparent_72%)] text-white/90 transition-colors hover:text-white"
+>
+  <p
+    class="mx-auto flex min-h-[var(--banner-h)] max-w-6xl flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-5 py-2 text-center text-sm"
+  >
+    <span
+      class="rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-dark"
+    >
+      New
+    </span>
+
+    <!-- One sentence per breakpoint rather than one that wraps: the bar has to stay
+         a single line for --banner-h to hold. -->
+    <span class="hidden md:inline">
+      Psst — Torii runs right in your browser now. Faster, smoother, nothing to install.
+    </span>
+    <span class="md:hidden">Psst — Torii has a web app.</span>
+
+    <span
+      class="inline-flex items-center gap-1 font-semibold text-accent underline-offset-4 group-hover:underline"
+    >
+      <span class="hidden md:inline">Try it now</span>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="transition-transform group-hover:translate-x-0.5"
+        aria-hidden="true"
+      >
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </span>
+  </p>
+</a>

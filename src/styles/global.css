@@ -41,15 +41,20 @@
 
 @layer base {
   :root {
-    /* Sticky header height: py-3 (1.5rem) + the 2.25rem logo. The full-screen hero
-       subtracts this so the hero plus header occupy exactly one viewport. */
+    /* Sticky header height: py-3 (1.5rem) + the 2.25rem logo. */
     --header-h: 3.75rem;
+
+    /* Announcement bar height. It sticks to the top along with the header, so the
+       full-screen hero subtracts both and the three occupy exactly one viewport.
+       Copy that wraps to a second line breaks this - keep the bar to one line. */
+    --banner-h: 3rem;
   }
 
   html {
     scroll-behavior: smooth;
-    /* Anchored release-note headings shouldn't hide under the sticky header. */
-    scroll-padding-top: 5.5rem;
+    /* Anchored release-note headings shouldn't hide under the sticky bar + header
+       (--banner-h + --header-h), plus a little breathing room. */
+    scroll-padding-top: 8.5rem;
   }
 
   body {

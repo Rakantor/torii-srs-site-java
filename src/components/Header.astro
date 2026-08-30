@@ -13,7 +13,9 @@ const links = [
 const isActive = (href: string) => href === '/' && pathname === '/';
 ---
 
-<header class="sticky top-0 z-40 border-b border-black/5 bg-white/95 backdrop-blur-sm">
+<!-- Sticky positioning lives on the wrapper in BaseLayout, which pins this and the
+     announcement bar to the top as one block. -->
+<header class="relative border-b border-black/5 bg-white/95 backdrop-blur-sm">
   <nav
     class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3"
     aria-label="Main"
