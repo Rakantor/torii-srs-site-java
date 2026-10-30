@@ -71,6 +71,4 @@ frontmatter — it appears on `/release-notes/` automatically, newest first.
 ## Git conventions
 
 - **Single-line commit messages.** No body, no bullet list.
-- **No attribution trailers** — no `Co-Authored-By`, no "Generated with" lines, nothing naming
-  the tool or model that made the change.
 - **Never push.** Commit only when asked, and leave pushing to a human.

@@ -4,9 +4,6 @@ The installers are not served from this site. They live in the Cloudflare R2 buc
 `torii-downloads`, behind the custom domain `dl.torii-srs.com`. `src/data/downloads.ts` holds
 every URL and is the only place that needs editing for a new release.
 
-They were moved there in August 2026, when the site was rebuilt off WordPress. Each object was
-verified byte-identical to the file WordPress had been serving before the site was switched over.
-
 ## Publishing a new release
 
 Upload under a `v<version>/` prefix:
@@ -19,7 +16,7 @@ npx wrangler r2 object put torii-downloads/v1.5.0/ToriiSRS-winX64.zip --file Tor
 npx wrangler r2 object put torii-downloads/v1.5.0/ToriiSRS-1.5.0-macM1.dmg --file ToriiSRS-1.5.0-macM1.dmg --content-type application/x-apple-diskimage
 ```
 
-Then update `latest`, `LATEST_VERSION` and `LATEST_RELEASED` in
+Then update `latest` and `LATEST_VERSION` in
 [`src/data/downloads.ts`](src/data/downloads.ts), move the previous version into `legacy`, and add
 a changelog entry under `src/content/releases/`.
 
@@ -36,7 +33,7 @@ egress cost.
 
 ## Checksums as uploaded
 
-sha256 of each object, recorded at upload time against the WordPress originals.
+sha256 of each object, recorded at upload time.
 
 | Object | Bytes | sha256 |
 | --- | ---: | --- |

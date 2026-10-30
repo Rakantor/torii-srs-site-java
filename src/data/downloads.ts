@@ -23,7 +23,6 @@ export const url = (b: Binary): string => `${R2_BASE}/${b.key}`;
 export const size = (b: Binary): string => `${(b.bytes / 1_000_000).toFixed(1)} MB`;
 
 export const LATEST_VERSION = '1.4.9';
-export const LATEST_RELEASED = 'November 20, 2025';
 
 export const latest = {
   windows: [

@@ -94,8 +94,3 @@ ErrorDocument 404 /404.html
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
     application/javascript application/json image/svg+xml
 </IfModule>
-
-# Cloudflare Pages config files, if any were uploaded.
-<FilesMatch "^(_redirects|_headers)$">
-  Require all denied
-</FilesMatch>
