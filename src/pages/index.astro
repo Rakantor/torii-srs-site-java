@@ -46,7 +46,6 @@ const features = [
     body: 'Torii SRS is available for Windows, Mac and Linux, as well as Android devices.',
   },
   {
-    // Original had a stray double period at the end of this sentence.
     title: 'Cloud Synchronisation',
     icon: 'cloudSync',
     body: 'Your account data is safely stored in our Cloud and automatically synced across all your devices.',
@@ -58,17 +57,12 @@ const features = [
   title="Torii SRS – Japanese vocabulary learning tool"
   description="Torii helps you learn the 10,000 most commonly used Japanese words—effectively and in a way that truly sticks. Free for Windows, Mac, Linux and Android."
 >
-  <!--
-    Hero. The devices are a transparent cut-out (see scripts/cut-hero-devices.py) rather
-    than the original baked-in background image, so the copy and the artwork can be sized
-    independently. The section carries the source image's own gradient.
-  -->
+  <!-- Hero. The devices are cut out of the original hero image as a transparent PNG;
+       the section carries that image's gradient. -->
   <section class="hero flex min-h-[calc(100svh-var(--header-h)-var(--banner-h))] items-center">
-    <!-- Wider than the rest of the page, and weighted toward the artwork, so the
-         mockup fills the space beside the copy without shrinking the text column. -->
     <div class="mx-auto w-full max-w-7xl px-5 py-14">
       <div class="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:gap-6">
-        <!-- Layers reveal in sequence on load, as the original slider's did. -->
+        <!-- Reveals in sequence on load, like the original slider. -->
         <div>
           <h1 class="font-display text-5xl leading-[1.1] sm:text-6xl">
             <span class="block font-light text-ink/85" data-reveal>Level up your</span>
@@ -151,7 +145,7 @@ const features = [
     </div>
   </section>
 
-  <!-- Features. Dark section, as on the original site (lighter than the footer). -->
+  <!-- Features. Dark section, as on the original site. -->
   <section id="features" class="bg-dark-soft py-16 sm:py-24">
     <div class="mx-auto max-w-6xl px-5">
       <header class="mb-14 text-center" data-reveal>
@@ -189,7 +183,7 @@ const features = [
 </BaseLayout>
 
 <style>
-  /* The gradient the original hero image had baked into it. */
+  /* The original hero image's gradient. */
   .hero {
     background: linear-gradient(to bottom, #f4f4f4, #dfe0e2);
   }

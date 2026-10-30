@@ -1,17 +1,12 @@
 ---
 /**
- * Points visitors at the new web app.
+ * Announcement bar pointing visitors at the web app. Sits above the header inside
+ * BaseLayout's sticky wrapper.
  *
- * Sits above the header inside BaseLayout's sticky wrapper, so the two pin to the top
- * of the viewport together and the bar stays visible the whole way down the page.
+ * The bar is --banner-h tall, which the home hero subtracts along with the header,
+ * so each copy variant has to fit on one line at its breakpoint.
  *
- * Its height is pinned to --banner-h, which the full-screen home hero subtracts along
- * with the header. Copy that wraps to a second line breaks that math - keep each
- * variant to one line at its breakpoint: the long sentence needs ~680px of bar, which
- * is why it waits for md rather than sm, and the short one has to survive a 320px screen.
- *
- * The copy here is new, not ported from the old WordPress site, so the "verbatim copy"
- * rule in AGENTS.md does not apply to it.
+ * The copy is new, not ported from the WordPress site.
  */
 import { WEB_APP_HREF } from '../data/site';
 ---
@@ -29,8 +24,7 @@ import { WEB_APP_HREF } from '../data/site';
       New
     </span>
 
-    <!-- One sentence per breakpoint rather than one that wraps: the bar has to stay
-         a single line for --banner-h to hold. -->
+    <!-- One sentence per breakpoint, each short enough for a single line. -->
     <span class="hidden md:inline">
       Psst — Torii runs right in your browser now. Faster, smoother, nothing to install.
     </span>

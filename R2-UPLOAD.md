@@ -29,11 +29,10 @@ Check the uploads resolve:
 for f in v1.5.0/ToriiSRS-winX64.zip v1.5.0/ToriiSRS-1.5.0-macM1.dmg; do printf '%s %s\n' "$(curl -sIL -o /dev/null -w '%{http_code}' "https://dl.torii-srs.com/$f")" "$f"; done
 ```
 
-## Why not the web server
+## Why R2
 
-Nothing technical prevents it now that the site is on Apache rather than Cloudflare Pages — the
-25 MB per-file limit that originally forced this only applies to Pages. R2 is kept because it
-serves ~250 MB of installers off the origin, from a CDN, at no egress cost.
+The installers add up to about 260 MB. R2 serves them off the origin, from a CDN, at no
+egress cost.
 
 ## Checksums as uploaded
 

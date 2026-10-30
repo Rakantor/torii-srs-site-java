@@ -51,10 +51,8 @@ const btn =
       </p>
     </div>
 
-    <!--
-      CSS-only tabs: one radio per panel, panels revealed via :checked ~ .
-      A small inline script below adds hash deep-linking as progressive enhancement.
-    -->
+    <!-- CSS-only tabs: one radio per panel, shown with a :checked ~ sibling selector.
+         The script below adds hash deep-linking. -->
     <div class="mt-11 download-tabs">
       {
         tabs.map((tab, i) => (
@@ -246,8 +244,7 @@ const btn =
 </style>
 
 <script is:inline>
-  // Progressive enhancement: /download/#macos opens that tab, and switching
-  // tabs updates the hash so the URL stays shareable.
+  // /download/#macos opens that tab, and switching tabs updates the hash.
   (() => {
     const ids = ['windows', 'macos', 'linux', 'android'];
 

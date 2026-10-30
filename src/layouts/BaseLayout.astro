@@ -37,7 +37,7 @@ const ogImage = new URL(image, Astro.site);
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Set before first paint so revealed elements never flash in visible first. -->
+    <!-- Runs before first paint so [data-reveal] elements do not flash visible first. -->
     <script is:inline>
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         document.documentElement.classList.add('js-anim');

@@ -1,7 +1,7 @@
 ---
-// Replaces the original Smart Slider 3 carousel that sat beside the intro copy.
-// Manual advance only (the original did not autoplay): arrows, dots and arrow keys.
-// Clicking a slide opens it full size in a native <dialog>.
+// Screenshot carousel beside the intro copy (Smart Slider 3 on the original site).
+// Manual advance only: arrows, dots and arrow keys. Clicking a slide opens it
+// full size in a native <dialog>.
 const shots = [
   { file: 'showcase_001.png', caption: "Torii's Dashboard." },
   { file: 'showcase_002.png', caption: 'Study Interface.' },
@@ -109,7 +109,7 @@ const navBtn =
     pointer-events: auto;
   }
 
-  /* Without JS every slide would stack invisibly, so show the first one. */
+  /* Before the script runs, and without JS, show the first slide. */
   .slideshow:not([data-ready]) .slide:first-child {
     opacity: 1;
     pointer-events: auto;

@@ -1,9 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Cloudflare Pages serves dist/404.html with a real 404 status for unmatched paths.
-// Without this file it falls back to index.html with a 200, which makes every
-// nonexistent URL look like a duplicate of the home page to search engines.
+// Built to dist/404.html, which Apache serves as the 404 ErrorDocument (deploy/htaccess).
 ---
 
 <BaseLayout

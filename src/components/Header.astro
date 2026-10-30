@@ -13,8 +13,7 @@ const links = [
 const isActive = (href: string) => href === '/' && pathname === '/';
 ---
 
-<!-- Sticky positioning lives on the wrapper in BaseLayout, which pins this and the
-     announcement bar to the top as one block. -->
+<!-- Sticky positioning is on the wrapper in BaseLayout, shared with the announcement bar. -->
 <header class="relative border-b border-black/5 bg-white/95 backdrop-blur-sm">
   <nav
     class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3"
@@ -25,7 +24,7 @@ const isActive = (href: string) => href === '/' && pathname === '/';
       <span class="font-display text-lg font-bold tracking-tight text-ink">Torii SRS</span>
     </a>
 
-    <!-- Checkbox toggle keeps the mobile menu working without any JavaScript. -->
+    <!-- Checkbox toggle: the mobile menu works without JavaScript. -->
     <input type="checkbox" id="nav-toggle" class="peer hidden" />
     <label
       for="nav-toggle"
@@ -38,9 +37,8 @@ const isActive = (href: string) => href === '/' && pathname === '/';
     </label>
 
     <ul
-      {/* bg-white is for the mobile dropdown panel; on desktop it must go transparent,
-          otherwise it paints an opaque block over the header's translucent backdrop
-          and shows as a lighter patch once content scrolls underneath. */}
+      {/* md:bg-transparent is needed: the mobile panel's bg-white would otherwise show
+          as an opaque patch over the header's translucent backdrop. */}
       class="absolute inset-x-0 top-full hidden flex-col gap-1 border-b border-black/5 bg-white px-5 py-3 shadow-sm peer-checked:flex md:static md:flex md:flex-row md:items-center md:gap-7 md:border-0 md:bg-transparent md:p-0 md:shadow-none"
     >
       {

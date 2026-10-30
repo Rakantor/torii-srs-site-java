@@ -7,7 +7,7 @@ const releases = (await getCollection('releases')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Render every entry up front so the whole changelog lives on one page.
+// Render every entry; the whole changelog is one page.
 const entries = await Promise.all(
   releases.map(async (entry) => ({
     ...entry,

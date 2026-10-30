@@ -2,16 +2,15 @@
 dist/
 .astro/
 
-# local Miniflare state from `wrangler pages dev` - scratch only, regenerated on demand
+# wrangler local state
 .wrangler/
 
-# dependencies - pnpm is the package manager, pnpm-lock.yaml is the only lockfile
+# dependencies; pnpm-lock.yaml is the only lockfile
 node_modules/
 package-lock.json
 yarn.lock
 
-# local copies of the installers - ~250MB. These are served from Cloudflare R2,
-# never from git or the web server. See R2-UPLOAD.md.
+# local copies of the installers, which are served from Cloudflare R2 (R2-UPLOAD.md)
 binaries/
 
 # environment

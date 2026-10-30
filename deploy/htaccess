@@ -5,50 +5,28 @@
 # transaction-*.html, img_files/, icns/, font_files/, audio_files/). Nothing here
 # should touch those.
 #
-# Replaces public/_redirects and public/_headers, which are Cloudflare Pages
-# formats and are ignored by Apache.
-#
-# Requires: mod_rewrite, mod_headers, mod_alias, mod_dir
-#   sudo a2enmod rewrite headers alias dir && sudo systemctl reload apache2
+# Requires: mod_rewrite, mod_headers, mod_setenvif, mod_alias, mod_dir
+#   sudo a2enmod rewrite headers setenvif alias dir && sudo systemctl reload apache2
 
-# No directory listings (kept from the previous Really Simple Security block).
+# No directory listings.
 Options -Indexes
 
-# index.php stays in the list for anything under /api/ that relies on a PHP
-# index. The WordPress index.php at the document root should be deleted.
+# index.php is for the PHP API under /api/.
 DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
+  # Rules here are not inherited by /api/v1/ and /api/v2/, which switch on their
+  # own RewriteEngine.
   RewriteEngine On
 
-  # Nothing to do with WordPress: exposes the Authorization header to CGI/FastCGI.
-  # /api/v1/ and /api/v2/ each set this for themselves, so they do not depend on
-  # it, but it costs nothing and covers anything added later without its own
-  # .htaccess. Keep it.
+  # Passes the Authorization header through to CGI/FastCGI.
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
 
-# The WordPress front controller that used to live here:
-#
-#   RewriteCond %{REQUEST_FILENAME} !-f
-#   RewriteCond %{REQUEST_FILENAME} !-d
-#   RewriteRule . /index.php [L]
-#
-# is deliberately gone. It sent every unmatched URL into WordPress; with WordPress
-# removed it would 500, and while present it overrides the 404 page below.
-#
-# Removing it does not affect the API: mod_rewrite rules are not inherited into a
-# subdirectory that switches on its own RewriteEngine (absent RewriteOptions
-# Inherit), and both /api/v1/ and /api/v2/ do exactly that. They never saw these
-# rules in the first place.
+# DirectorySlash (mod_dir, on by default) redirects /mac-help to /mac-help/; each
+# page is a directory holding an index.html.
 
-# mod_dir's DirectorySlash (on by default) already 301s /mac-help -> /mac-help/,
-# because each page is a directory containing index.html.
-
-# Safe for the API. /api/v1/ and /api/v2/ each have their own .htaccess with a
-# front controller (`RewriteRule ^(.*)$ index.php`), so PHP handles every request
-# in those subtrees and emits its own 404 body. Apache only substitutes an
-# ErrorDocument when it generates the error itself, which never happens there.
+# Inherited by /api/ but not triggered there: PHP answers every request, 404s included.
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
@@ -59,7 +37,7 @@ ErrorDocument 404 /404.html
   Redirect 301 /home-startup/ /
   Redirect 301 /home-startup  /
 
-  # Individual changelog posts are now anchors on one page
+  # Dated changelog posts map to anchors on the release notes page
   Redirect 301 /2025/11/20/version-1-4-9/ /release-notes/#v1-4-9
   Redirect 301 /2020/05/07/version-1-4-8/ /release-notes/#v1-4-8
   Redirect 301 /2020/05/03/version-1-4-7/ /release-notes/#v1-4-7
@@ -85,8 +63,7 @@ ErrorDocument 404 /404.html
   RedirectMatch 301 ^/wp-admin(/.*)?$ /
   Redirect 301 /wp-login.php /
 
-  # Installers now live in Cloudflare R2. Keeps links published while the site
-  # ran on WordPress working after wp/ is deleted.
+  # Old WordPress upload paths for the installers, which are in R2.
   RedirectMatch 301 ^/wp/wp-content/uploads/2025/11/(.*)$ https://dl.torii-srs.com/v1.4.9/$1
   RedirectMatch 301 ^/wp/wp-content/uploads/2020/05/(.*)$ https://dl.torii-srs.com/v1.4.8/$1
 </IfModule>
@@ -107,8 +84,7 @@ ErrorDocument 404 /404.html
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set X-Frame-Options "SAMEORIGIN"
 
-  # Was `".(eot|ttf|otf|woff)"` - the dot was unescaped (matching any character)
-  # and woff2 was missing, which is the format this site actually serves.
+  # CORS for font files.
   <FilesMatch "\.(eot|ttf|otf|woff2?)$">
     Header set Access-Control-Allow-Origin "*"
   </FilesMatch>
@@ -119,7 +95,7 @@ ErrorDocument 404 /404.html
     application/javascript application/json image/svg+xml
 </IfModule>
 
-# Cloudflare Pages artefacts, if they were uploaded. Harmless but not public.
+# Cloudflare Pages config files, if any were uploaded.
 <FilesMatch "^(_redirects|_headers)$">
   Require all denied
 </FilesMatch>
